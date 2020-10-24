@@ -465,4 +465,6 @@ You should then proceed to pull the most recent changes from your co-worker and 
 At the moment we are following the BEM convention for naming css classes.
 You can read succinct documentation about that here: [link](https://css-tricks.com/bem-101/)
 
+## Teamwork Methods
+
 - Modified by `Henry J. E. Crookes` on `24.10.2020`
