@@ -456,7 +456,8 @@ You should then proceed to pull the most recent changes from your co-worker and 
 > Try to avoid making any changes yourself unless necessary. Otherwise your co-worker will have to pull updates back to themselves. This is not an unusual thing to do, but for the sake of cohesion within our small team, it should be avoided.
 
 7. `$ git checkout your-branch-name`
-   > (always make sure to switch back to your original branch to avoid accidental changes)
+
+> (always make sure to switch back to your original branch to avoid accidental changes)
 
 ## Standard Practices
 
