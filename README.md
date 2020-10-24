@@ -1,2 +1,468 @@
-# readme-example
-documentation for the front-end development of Morpheus, Berlin
+<h1 align="center" style="margin: 10px; font-weight: 700" > Morpheus </h1>
+<h3 align="center" style="margin: 5px; font-weight: 400"> Front-end - Version.1 React-app </h3>
+<h2 align="center" style="margin: 10px" > 🌍 🔋 ⚡ ☀️ ♻️ </h2>
+
+## Table of Contents:
+
+- [What is this?](#what-is-this)
+- [Getting Started](#getting-started)
+  - [SSH-keys](#ssh-keys)
+  - [install create-react-app](#create-react-app)
+  - [clone this repo](#clone-this-repo)
+  - [start your own branch](#start-your-own-branch)
+  - [run the server](#run-the-server)
+- [Project Structure](#project-structure)
+  - [naming files](#naming-files)
+  - [placing files](#placing-files)
+- [Git Workflow](#git-workflow)
+  - [contributing](#contributing)
+  - [branch naming](#branch-naming)
+  - [git processes](#git-processes)
+- [Standard Practices](#standard-practices)
+  - [CSS](#css)
+- [Teamwork Methods](#teamwork-methods)
+
+<a name="what-is-this"></a>
+
+## what is this?
+
+This repository contains the Front-End development code-base of the Morpheus website.
+
+#### Built With:
+
+<p align="center">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" width="50px" />
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/49/Redux.png" width="50px"  />
+    <img src="https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg" width="70px"  />
+    <img src="https://upload.wikimedia.org/wikipedia/commons/9/96/Sass_Logo_Color.svg" width="40px"  />
+</p>
+Morpheus' front-end is primarily built on React via the create-react-app with Redux, Node and utilising SASS for CSS pre-processing.
+
+---
+
+#### README summary:
+
+This README acts as a comprehensive guide to the daily development for the Morpheus front-end team.
+
+The information contained here is as follows:
+
+- a step-by-step guideline on how to install React and get the app up and running on your machine.
+- The provided structure of the project files. I.E directories, filenames, spelling and casing.
+- The standard team workflow for Git usage. I.E committing, pushing, merging and rebasing your work.
+- General code standards and practices used within the project.
+- Teamwork methods, tools and general information.
+
+## Getting Started
+
+<a name="ssh-keys"></a>
+
+##### 1. Connecting your machine to the Gitlab account.
+
+To begin with, you should set up your Gitlab account with an SSH-Key from your machine.
+
+If you are unfamiliar with SSH keys, you can check the official Gitlab or Github (more detailed) documentation on generating keys and connecting with them:
+
+- [Gitlab](https://docs.gitlab.com/ee/ssh/)
+- [Github](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/connecting-to-github-with-ssh)
+- [Dev.to tutorial](https://dev.to/sndrx/how-to-set-up-an-ssh-key-and-use-it-in-gitlab--42p1)
+
+To do this, on gitlab, click on your user icon & go to settings/SSH Keys and add your entire key which should look something like:
+
+```bash
+ssh-rsa [a long string of numbers and letters...] your-git-config-email@mail.com
+```
+
+If you are unable to do this, you can always connect to the repository via `HTTPS`.
+This will result in you having to enter your Git config username & password for each Git action you do.
+
+<a name="create-react-app"></a>
+
+##### 2. Install the create-react-app package globally.
+
+You should make sure that you have a recent version of `Node` & `npm` on your machine. To use create-react-app it must be at least Version **8.10** & **5.12** respectively.
+
+In your terminal run these 2 commands:
+
+- `$ npm install -g create-react-app`
+- `$ npm list -g --depth=0`
+
+This last command will inform you of all your globally installed packages. If you do not see `create-react-app` in the list, try prefixing the install command with **sudo**.
+
+The list should look something like this:
+
+```python
+├── npm@6.14.6
+├── create-react-app@3.4.1
+```
+
+<a name="clone-this-repo"></a>
+
+##### 3. Clone this repository
+
+Now that you have a connection to Gitlab and the necessary packages, we can download the existing code and get a server up and running.
+
+In your terminal, `CD` into an appropriate directory and run this command to clone the master branch with **SSH**:
+
+```bash
+$ git clone git@gitlab.com:joinmorpheus/morpheus-website-v.1-react.js.git
+```
+
+or, **HTTPS**:
+
+```bash
+$ git clone https://gitlab.com/joinmorpheus/morpheus-website-v.1-react.js.git
+```
+
+Once this has downloaded, you should be able to see the basic react-app files from this repo.
+
+<h3 style="color: red; font-weight: bold"> DO NOT PUSH ANY CHANGES TO THIS BRANCH!</h3>
+
+None of the development work is done on Master.
+The most **up to date code** will be on the `develop branch`.
+
+Your next command should be to switch to the develop branch, pull that code and then make your own branch from there.
+
+<a name="start-your-own-branch"></a>
+
+##### 4. Start your own branch
+
+Before we begin, we need to cover the naming convention of our branches. To avoid cluttering the repo with branches that have vague and useless names like "mikes-branch", we should stick to using the name of the appointed task on the Trello card you should have been given for the feature/issue you are working on.
+
+For instance, if you are working on a task called "Figma Desktop 10 - create notifications icon" on Trello, you should name your branch something that lets everyone know:
+
+- who worked on the branch
+- what categorical relation to the project the branch has (WIP, feat, test, bug, junk)
+- what the new code on this branch will be in relation to
+
+This is a perfect example `mike/feat/create-notifications-icon`
+We now have an idea of who is working on it, and what code we should expect to find in there. Let's move on.
+
+Whilst we are still on the master branch run these commands in the following order:
+
+- `$ git fetch --all`
+- `$ git checkout develop`
+- `$ git checkout -b name-of-your-branch`
+- `$ git push origin name-of-your-branch`
+
+You might recieve a warning saying something like:
+
+> The authenticity of host 'github.com (140.82.121.4)' can't be established.
+> RSA key fingerprint is .....
+> Are you sure you want to continue connecting (yes/no)?
+
+    This is normal. Type "yes", enter and move on.
+
+Now you should have your own branch which is a copy of the development branch where you are able to work on new code without accidentally overwriting the basic code-base of the whole project.
+
+<a name="run-the-server"></a>
+
+##### 5. Run the server
+
+From the top level of the project directory, you only need to run a couple of commands to get a development server up and running:
+
+```bash
+$ npm install
+$ npm start
+```
+
+From here you should have a developmental server running on your localhost in your default browser.
+
+If for any reason you need to run a create-react-app server on a different port, you can do this by editing the `scripts` section in the Package.JSON:
+
+change `"start": "react-scripts start"`
+to:
+
+- For Linux systems: `"start": "PORT=3006 react-scripts start"`
+  - or `"start": "export PORT=3006 react-scripts start"`
+- For Windows systems: `"start": "set PORT=3006 && react-scripts start"`
+
+You can replace the port number with anything other than the default 3000.
+
+## Project Structure
+
+To create a clear and efficient system of working on features, we have a strictly organised system of arranging sub-directories, files and naming conventions within the project. This helps to prevents issues with merge-conflicts where different developers might accidentally create files and folders with the same name but different contents. This can dramatically impact progress and waste valuable time. To offset this we have built a standard structure as follows.
+
+---
+
+<a name="naming-files"></a>
+
+### Directory and File names
+
+Except for the items in the root directory (public, src, package.json, etc),
+directories should have capitalised `CamelCase` names without spaces.
+Javascript and most other file-types should follow the same rule.
+
+Wrong:
+
+- [ ] `/src/components/common/special button/special button.js`
+
+Correct:
+
+- [x] `src/Components/Common/SpecialButton/SpecialButton.js`
+
+#### Exceptions:
+
+- `SCSS/CSS` files are all lowercase. This is standard convention and helps to discern between the filetypes when you have similar named files in a directory together.
+
+Example:
+
+```
+📦Components
+ ┣ 📂Base
+ ┣ 📂Common
+ ┃ ┗ 📂Button
+ ┣    ┗ 🟨 Button.js
+ ┣    ┗ 🟦 button.css
+
+```
+
+- If a component contains a set of smaller components that are relative only to that parent component, it can be okay to create a containing sub-directory using an underscore and a distinct element name to separate the child components from the parent.
+
+Example:
+
+```
+📦Components
+ ┣ 📂Common
+ ┣ 📂Forms
+ ┃ ┗ 📂DataForm
+ ┣    ┗ 📜 DataForm.js
+ ┣    ┗ 📜 DataForm.scss
+ ┃    ┗ 📂 DataForm_Blocks
+ ┣        ┗ 📜 AcceptTerms.js
+ ┣        ┗ 📜 UserAddressInput.js
+```
+
+---
+
+<a name="placing-files"></a>
+
+### Where to place your files
+
+**NESTING**:
+Generally speaking, it is a poor practice to nest any more than 4 directories deeper than the core folder inside of src. This can become inconvenient when your imports start to look like - `import * from "../Components/Common/Buttons/LargeButtons/LargeGreenButtons/LargeGreenButtons.js"`
+
+**MAJOR COMPS**: As of the moment, the size of Morpheus code-base is not so large that there are a wide range of functions within the site. Therefore major Components such as "SwitchingProcess" and "CompareRates" live directly in the top-level of `src/Components`.
+As the size of the Morpheus project grows, this may be subject to change.
+
+**REUSABLE COMPS**: We advise keeping small reusable features in a self-contained, clearly labelled sub-folder in `/src/Components/Common`. Think customised buttons, checkboxes, popups etc.
+
+**ASSETS**: Images, icons, and other general assets should be imported into their required places via Javascript. They should be contained in the `/Assets` directory inside of `/src` in an appropriate place such as:
+
+```
+📦src
+ ┣ 📂Assets
+ ┣     ┗ 📂Logos
+ ┣        ┗ 📜 MorpheusLogo.svg
+ ┣ 📂Components
+ ┣ ...
+```
+
+Files inside the `/public` directory in the top level will not be processed by Webpack. Only static files like `index.html` and `favicon.ico` should live in public.
+
+**ROUTES**: Any component that will be explicitly rendered via the `React-Router` in `/src/App.js` is considered a "Route" and as such is a "Super-Parent" to all further child components that come from it. To keep this concept simple, the Route's and their respective files will live in `/src/Routes`. This way you can track the process of which Super-Parent is rendering the components out.
+
+**TESTS**: Testing suite files should belong in the directory of which specific Component the tests belong to.
+
+**HOOKS**: For the time being, there are only a few implemented custom hooks so these will live in a separate Directory in `/src/Components/Hooks`
+
+**UTILITIES**: Reusable functions that can be imported and used throughout the project should live in a separate directory in `/src/utils`
+
+**REDUX REDUCERS/ACTIONS**: We follow the 'rails' convention with our Redux libraries. Therefore reducers and actions will live in their respective folders alongside each other in the `/src` directory:
+
+```
+📦src
+ ┣ 📂Actions
+ ┣    ┗ 📜 UserActions.js
+ ┣    ┗ 📜 RatesActions.js
+  ...
+ ┣ 📂Reducers
+ ┣    ┗ 📜 UserReducers.js
+ ┣    ┗ 📜 RatesReducers.js
+```
+
+## Git workflow
+
+### contributing
+
+To begin with we will use the following diagram to show our system on contributing to the Morpheus codebase
+
+<img width="500px" src="https://trello-attachments.s3.amazonaws.com/5ef9c8ccf312d730a8cda4eb/5f14d8d12f6c4b4db39f33cb/c427f9c013839201a5221cf93d9cee92/GitLab_Workflow.png"/>
+
+As shown in the diagram , we have two main-branches:
+
+- Master
+- Develop
+
+and two sub sets of branches:
+
+- Hotfix
+- Feature
+
+To clearly explain how you should be contributing code to the project, whilst you are working on a feature, testing or fixing issues etc, you should never be working on the `Master` or `Develop` branch. Your Git account should always be located in a `Feature` or `Hotfix` branch.
+
+From here, as you finish tasks you will then proceed to merge your feature branch to the Develop branch. This code will be reviewed and tested, and once it is proven to be stable, the `Develop` branch will be merged into the `Master` upon a new version of the project.
+
+Hotfixes work on a principle of introducing a quick change to the live version of the project. Perhaps a bug occurred in production. A `Hotfix` branch when finished will be quickly merged back into the `Master` to solve that issue, and then also merged back down into `Develop` to keep all the code up to date. `Hotfix` branches can be deleted after the code has been merged across the project to avoid clutter.
+
+---
+
+### Branch Naming:
+
+First we will re-discuss the issue of naming branches as outlined in the installation process.
+
+All branches should be **completely lowercase** and delimited by only forward slashes `/` and hyphens `-`.
+
+branch names should follow a simple convention of 3 parts.
+
+1. The author of the code (as short as possible. i.e "char"/ instead of "charlotte")
+2. The category of the branch
+3. The name of the feature/issue relating to the code
+
+The 4 categories of branching are:
+
+| category | purpose                                                                |
+| -------- | ---------------------------------------------------------------------- |
+| W.I.P    | A work in progress, tasks that don't have a deadline                   |
+| Feature  | A feature you are adding to, expanding on or in the process of testing |
+| Bug      | You are explicitly fixing bugs or experimenting                        |
+| Junk     | A throwaway branch created to experiment, then delete                  |
+
+The name of the feature/issue should be as simple as possible to explain the relevance of the code added within this branch. 3-4 words max should be plenty.
+
+This way, all branches should be easy to see who they belong to, categorise and track issues. Here are some examples:
+
+```bash
+├── john/wip/intro-animation-screen
+├── sarah/feat/footer-links
+└── dieter/bug/homepage-zindex-css-fix
+└── alison/junk/merging-john-sarah-dieter
+```
+
+### Git processes
+
+To avoid painful mistakes with overwriting code and losing files with bad merges, we should all endeavour to use the same Git processes. Outlined are the standards for every operation you should need:
+
+<h3 style="color: red; font-weight: bold">Careful Consideration:</h3>
+
+If you are concerned about merging your work with others or vice-versa, a safe way to trial this is to create a **test-branch** of your current one where you can attempt to merge/rebase other branches to it. This way you will have a throwaway branch that can be deleted in the extreme case something damaging occurs. If everything works as planned, you can push to develop and delete the original branch you left behind.
+
+> Helpful tip: To speed up the process of using git actions in the terminal, you should consider adding "aliases" to your .bashrc file.
+> This way you can use shorthands for often repeated actions like typing "gs" for "git status" or "gcom" to replace "git commit -m"
+
+---
+
+**MERGING BRANCHES**
+In some circumstances you may prefer to merge another person's work into your own without altering the commit history. The following method is a standard procedure for this action:
+
+1. `$ git checkout other-branch`
+2. `$ git pull origin`
+3. `$ git checkout your-branch`
+4. `$ git merge other-branch`
+
+Your branch should now have received the code from "other-branch"
+
+---
+
+**RESOLVING CONFLICTS**
+If merge conflicts occur, resolve them in this manner:
+
+1. In your text-editor/IDE open the files that contain merge issues.
+2. Keep or remove the changes that you require.
+3. Delete the merge tags from the file. These will look something like this:
+
+```
+<<<<<<<< HEAD
+=======
+>>>>>>>> other-branch
+```
+
+4. Save the files in the editor/IDE
+5. `$ git add .`
+6. `$ git commit`
+7. `$ git log --oneline`
+
+Committing without a message will open up an editor in the terminal such as VIM or Nano. Simply save and exit the editor without any changes. This will prevent from creating an unnecessary merge commit log to the history. The last command will show you an up to date history of commits after the merge.
+
+---
+
+**SQUASHING COMMITS**
+If you are working on a branch with a lot of commits, but you don't want to clutter the commit history, for example perhaps you were iterating on some documentation. You can use the interactive rebase editor to squash your commit history down to a single commit. Use the following method to achieve this
+
+1. `$ git checkout your-feature-branch`
+2. `$ git rebase -i` or `$ git rebase -i HEAD~[the number of commits you want to squash down]`
+
+This will bring up an editor such as VIM or Nano. You will be shown a list of commits and a verb at the start.
+The philosophy here is that you are squashing the more recent commits down on to the head of the branch. Essentially when the branch was last pushed to remote.
+
+3. Next you want to edit the verbs at the start of the commits, squashing newest down to oldest. It should look something like this:
+
+```
+pick 596d1e1 fixed image url <--- oldest commit / location of HEAD
+squash 924430f fixed about page link
+squash 596d1e1 renamed file
+squash 924430f imported css file <--- newest commit
+```
+
+As the editor suggests, you can use a short hand for these verbs such as "p" for pick and "s" for squash.
+
+4. After you save and exit the editor, you will see a new editor screen asking what commit message you want to use. We recommend simply commenting out all but the most recent message so it is clear that the squash occurred at the point in time from when that commit was made.
+   If you feel it necessary, you can add a tag "-- squashed" to the end to make it clear a history change occurred.
+
+5. save and exit the editor once more and check the log with `$ git log --oneline`
+
+If everything went to plan, you should see a commit history with only one extra commit message that you chose.
+
+---
+
+**PUSHING A FINISHED FEATURE TO DEVELOP**:
+In the process of pushing our work to the develop branch, we need to take the utmost care to not cause any damage. This process might seem lengthy, but it is a sure-fire way to avoid any mistakes. with this method we are pulling any new changes on the develop branch to our local version, rebasing to our feature to avoid any conflicts, rebasing them back and then pushing develop to the remote.
+
+**DISCLAIMER:** Rebasing should only ever be performed on a branch that a single developer is working on. Rebasing re-writes commit history which can be harmful if two authors are changing a branch simultaneously. In this circumstance, Merging is the preferred method.
+
+1. `$ git checkout develop`
+2. `$ git pull`
+3. `$ git checkout your-feature-branch`
+4. `$ git rebase develop your-feature-branch`
+
+> Here, rebasing the develop branch onto your feature will move any recent commits on develop to the base of the feature branch, thus catching it up to any potential changes since your branch originally diverged from develop.
+
+5. `$ git checkout develop`
+6. `$ git rebase your-feature-branch develop`
+
+> Now we are taking the commits on the feature branch and placing them at the head of the develop branch.
+
+7. Solve any merge conflicts if existing.
+8. `$ git add .`
+9. `$ git rebase --continue`
+10. `$ git push develop origin`
+
+If at any point in the rebasing process you are unable to solve an issue, you can use the following command to halt the rebase process: `$ git rebase --abort`
+
+done!
+
+---
+
+**CHECKING OUT A CO-WORKERS' BRANCH FOR REVIEW**:
+First commit or stash any work before moving branch.
+You should then proceed to pull the most recent changes from your co-worker and if need be run a `npm install` to resolve any changes to the package.json their might be.
+
+1. `$ git add .`
+2. `$ git commit -m "simple commit message"`
+3. `$ git checkout coworkers-branch`
+4. `$ git pull`
+5. `$ npm install`
+6. Review the code.
+
+> Try to avoid making any changes yourself unless necessary. Otherwise your co-worker will have to pull updates back to themselves. This is not an unusual thing to do, but for the sake of cohesion within our small team, it should be avoided.
+
+7. `$ git checkout your-branch-name`
+   > (always make sure to switch back to your original branch to avoid accidental changes)
+
+## Standard Practices
+
+### CSS
+
+At the moment we are following the BEM convention for naming css classes.
+You can read succinct documentation about that here: [link](https://css-tricks.com/bem-101/)
+
+- Modified by `Henry J. E. Crookes` on `24.10.2020`
