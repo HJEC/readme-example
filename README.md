@@ -456,15 +456,151 @@ You should then proceed to pull the most recent changes from your co-worker and 
 > Try to avoid making any changes yourself unless necessary. Otherwise your co-worker will have to pull updates back to themselves. This is not an unusual thing to do, but for the sake of cohesion within our small team, it should be avoided.
 
 7. `$ git checkout your-branch-name`
-
-> (always make sure to switch back to your original branch to avoid accidental changes)
+   > (always make sure to switch back to your original branch to avoid accidental changes)
 
 ## Standard Practices
 
-### CSS
+### Javascript / General Development
 
-At the moment we are following the BEM convention for naming css classes.
++ First of all, please check your **developer console** in the browser for **errors**. This is where React is giving you crucial information that without being resolved, these errors will make it to production.
+
++ If you are using a state object without needing to set it again, just declare the state object inside `[ ]` on it's own. This way you wont end up with an unused setState variable. Example:
+
+```
+Incorrect:
+const [value, setValue] = useState(0)
+Correct:
+const [value] = useState(0);
+```
+
+### CSS / SCSS
+
++ At the moment we are following the **BEM** convention for naming css classes.
 You can read succinct documentation about that here: [link](https://css-tricks.com/bem-101/)
+
++ Use **comments** in your CSS/SCSS files to break down the styles into sections, and also clearly explain more complicated rules.
+
++ Lay out your elements & classes in the same order. This should follow a general pattern from top to bottom:
+
+1. Generic Classes / Main body of an element
+2. Specific elements
+3. Pseudo classes and effects / animations.
+4. Media Queries
+
++ Lay out your style rules for each element / class in the same pattern. This helps team-members to predict what your css will look like and save time. Generally this should be something like:
+
+```
+.example-class{
+// 1. Display, Positioning, Cursor, user-select & Content:
+        cursor: pointer;
+        user-select: text;
+        content: "";
+        display: flex;
+        position: absolute;
+        top: 0;
+        left: 0;
+// 2. Overflow, resize & scroll-behaviour:
+        overflow-x: hidden;
+        resize: scroll;
+// 3. Grid-rules, Alignment & float:
+        grid-gap: 5px
+        justify-content: flex-start;
+        align-self: center;
+        float: left;
+// 4. Margins, Paddings & sizing:
+        margin: 10px 20px;
+        padding: 5px;
+        height: auto;
+        width: 100%
+// 5. Colouring, background & object-fit:
+        color: #ffdab9
+        background-image: linear-gradient(90deg, #000, #fff)
+        background-repeat: no-repeat
+        object-fit: cover;
+// 6. Bordering:
+        border: 2px solid #000;
+        border-radius: 20px;
+        border-top-left-radius: 0px;
+// 7. Text:
+        font-family: "Montserrat", sans-serif;
+        font-size: 2rem;
+        line-height: 20px;
+        white-space: no-wrap;
+// 8. Visibility, Opacity & Z-indexing:
+        visibility: visible;
+        opacity: 0.5
+        z-index: -1
+// 9. Transitions, Animations & Transforms:
+        transition: all 1s ease-in-out;
+        animation: pop-up 1s linear;
+        transform: translateX(10px);
+// 10. Box-shadow, backface-visibility;
+        box-shadow: 5px 5px 0px 20px (#000. 0.5)
+        backface-visibility: hidden;
+}
+```
+
+
++ If you are using a set of styles often enough, consider creating a **generic class** of those styles and apply the class to elements in the standard BEM fashion. example:
+
+```
+.flex-column {
+    display: flex;
+    flex-direction: column
+}
+= = =
+<div className="flex-column">
+    \\ children
+</div>
+```
+
++ Creating an extra wrapping element to apply one specific style or ID should be avoided if possible. Styles should be respective of the children themselves. Thus targeting an element with *CSS selector combinators** would be the better option. Example:
+```
+.parent-with-child > ul:nth-child(2){
+    //styling here
+}
+```
+
++ Use **CSS shorthand** wherever possible. This creates a cleaner layout and less overall code. Example:
+
+```
+Incorrect:
+#example {
+    margin-top: 0px;
+    margin-right: 10px;
+    margin-bottom: 20px;
+    margin-left: 5px;
+}
+Correct:
+#example {
+    margin: 0px 10px 20px 5px;
+}
+```
+
++ Use **absolute positioning** sparingly! While tempting to style something specific using positioning, this can be hard to maintain and can quickly cause unwanted behaviour.
+
+
+
+
+## JSX / HTML
+
++ As image and icon files are located inside of `Assets` under `src`, you should be importing the image directly into javascript. This way, React will define an error if the file is not found, instead of showing a missing file icon in the browser. You should import like this:
+> `import` image-name `from` `"relative-path-location"`
+
++ Try to avoid creating unnecessary wrapping divs for the return statement in a function component. You can use `React.Fragment` elements or the shorthand `<> </>` to solve this issue.
+example:
+
+```
+export default function ExampleComp(){
+    return (
+        <>
+            <h1> We are children elements </h1>
+            <br/>
+            <p> Without a wrapping div! </p>
+        </>
+        )
+}
+```
 
 ## Teamwork Methods
 
