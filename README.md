@@ -11,16 +11,25 @@
   - [clone this repo](#clone-this-repo)
   - [start your own branch](#start-your-own-branch)
   - [run the server](#run-the-server)
+- [Deploying to firebase](#deploying-to-firebase)
+  - [install firebase CLI](#firebase-cli)
+  - [create production build](#production-build)
+  - [initialise firebase](#init-firebase)
+  - [deploy the app](#deploy-the-app)
+  - [teardown the app](#teardown-app)
 - [Project Structure](#project-structure)
   - [naming files](#naming-files)
   - [placing files](#placing-files)
+  - [importing files](#importing-files)
 - [Git Workflow](#git-workflow)
   - [contributing](#contributing)
   - [branch naming](#branch-naming)
   - [git processes](#git-processes)
 - [Standard Practices](#standard-practices)
-  - [CSS](#css)
-- [Teamwork Methods](#teamwork-methods)
+  - [Javascript](#javascript)
+  - [CSS](#CSS)
+  - [SCSS](#SCSS)
+  - [JSX/HTML](#jsx)
 
 <a name="what-is-this"></a>
 
@@ -34,9 +43,10 @@ This repository contains the Front-End development code-base of the Morpheus web
     <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" width="50px" />
     <img src="https://upload.wikimedia.org/wikipedia/commons/4/49/Redux.png" width="50px"  />
     <img src="https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg" width="70px"  />
+    <img src="https://gblobscdn.gitbook.com/spaces%2F-L9iS6WpW81N7RGRTQ-K%2Favatar.png?alt=media" width="40px"  />
     <img src="https://upload.wikimedia.org/wikipedia/commons/9/96/Sass_Logo_Color.svg" width="40px"  />
 </p>
-Morpheus' front-end is primarily built on React via the create-react-app with Redux, Node and utilising SASS for CSS pre-processing.
+Morpheus' front-end is primarily built on React via the create-react-app with Redux, Node, i18next for internationalisation and utilising SASS for CSS pre-processing.
 
 ---
 
@@ -126,9 +136,9 @@ Your next command should be to switch to the develop branch, pull that code and 
 
 ##### 4. Start your own branch
 
-Before we begin, we need to cover the naming convention of our branches. To avoid cluttering the repo with branches that have vague and useless names like "mikes-branch", we should stick to using the name of the appointed task on the Trello card you should have been given for the feature/issue you are working on.
+Before we begin, we need to cover the naming convention of our branches. To avoid cluttering the repo with branches that have vague and useless names like "mikes-branch", we should stick to using the name of the appointed task on the Trello/Asana card you should have been given for the feature/issue you are working on.
 
-For instance, if you are working on a task called "Figma Desktop 10 - create notifications icon" on Trello, you should name your branch something that lets everyone know:
+For instance, if you are working on a task called "Figma Desktop 10 - create notifications icon" on Trello/Asana, you should name your branch something that lets everyone know:
 
 - who worked on the branch
 - what categorical relation to the project the branch has (WIP, feat, test, bug, junk)
@@ -144,7 +154,7 @@ Whilst we are still on the master branch run these commands in the following ord
 - `$ git checkout -b name-of-your-branch`
 - `$ git push origin name-of-your-branch`
 
-You might recieve a warning saying something like:
+You might receive a warning saying something like:
 
 > The authenticity of host 'github.com (140.82.121.4)' can't be established.
 > RSA key fingerprint is .....
@@ -177,6 +187,86 @@ to:
 - For Windows systems: `"start": "set PORT=3006 && react-scripts start"`
 
 You can replace the port number with anything other than the default 3000.
+
+## Deploying To Firebase
+
+During the development process, we will be deploying a usability-testing version of the production app for the benefit of team cohesion, gaining real-time feedback and highlighting issues.
+The standard process is currently done by the frontend team leader, but this is subject to change as Morpheus grows. The 4-step process is as follows:
+
+1.  Any up-to-date changes are merged onto the development branch.
+2.  create a production build of the app with `npm run build`
+3.  initialise the develop branch if it isn't already, connecting to the "morpheus-frontent-testing" firebase project.
+4.  deploy a live version with `firebase deploy`
+
+<a name="firebase-cli"></a>
+
+### Install Firebase CLI
+
+To begin with, if you haven't already installed the firebase CLI with firebase tools, you will need these to be able to deploy to the project. Run this npm command to install the CLI:
+
+`npm install -g firebase-tools`
+
+You will now have the globally available firebase command on your local machine.
+After installation you must authenticate yourself with firebase. Login with:
+
+`firebase login`
+
+This will open a browser page where you can login with the `user.name@joinmorpheus.com` you should have connected to the Morpheus firebase account. Once successfully logged in, you can test your connection with:
+
+`firebase projects:list`
+
+**Quick note:** If for some reason you have logged into another firebase account on your machine, you can log out with `firebase logout` and repeat the login process.
+
+<a name="production-build"></a>
+
+### Create Production Build
+
+Before you can deploy the testing version of the app, you must generate a production version with the Webpack-Babel bundle command. In order to get to this point you should have the most up-to-date code in a functioning state that won't crash the site.
+
+Create a production build with this command:
+
+`npm run build`
+
+If you run into any errors, the terminal will output these to you and abort the process. If everything goes to plan you should be informed that it "Compiled successfully" with an indication of the file size.
+
+<a name="init-firebase"></a>
+
+### Initialise firebase
+
+**DISCLAIMER:** You should only have to run this command if the project is not already connected to a firebase-project.
+
+Once you have the production build, you are ready to connect the app to the firebase project. To interact with the firebase init form, you will move up and down with the arrow-keys and select options with the `space-bar`. After you use the `enter-key` to confirm a choice. Follow these steps exactly:
+
+1. run `firebase init`
+2. choose the "use an existing project" option.
+3. Select the "morpheus-frontend-testing" project.
+4. select the "hosting" option.
+5. When asked what to use as a public directory, type `build` and press enter. You do not want to use the `public` directory.
+6. When asked to configure as a single-page-app, agree to this by typing "Y" and pressing enter.
+**THIS STEP IS IMPORTANT. DO NOT PRESS ENTER WITHOUT LOOKING**
+7. When asked if you want to overwrite the index.html, **disagree** with **"N"** and press enter. This will avoid firebase overwriting the index.html we have in the public directory with the default firebase index.html.
+
+The firebase initialisation should now be complete.
+
+**DISCLAIMER:** If for some reason the initialisation went wrong, you can undo these changes by deleting the files created by firebase in the `.firebase` directory, as well as `.firebaserc` and `firebase.json`.
+
+<a name="deploy-the-app"></a>
+
+### Deploy The App
+
+Now that we have a production build and the repo is connected to the firebase project we can deploy a live version of the app to the web for usability testing. All you need to do at this stage is run this command:
+
+`firebase deploy`
+
+You should be presented with a success statement and a URL with which you can share with team members.
+
+<a name="teardown-app"></a>
+
+### Teardown The App
+
+If you need to disable the live version of the production app, you just need to run this command:
+
+`firebase hosting:disable -s morpheus-frontend-development`
 
 ## Project Structure
 
@@ -232,6 +322,9 @@ Example:
  ┣        ┗ 📜 UserAddressInput.js
 ```
 
+- Utility functions under the `Utils` directory are currently standard camelCase named: I.E:
+`src/Utils/Validation/dateFuncs.js`
+
 ---
 
 <a name="placing-files"></a>
@@ -241,7 +334,7 @@ Example:
 **NESTING**:
 Generally speaking, it is a poor practice to nest any more than 4 directories deeper than the core folder inside of src. This can become inconvenient when your imports start to look like - `import * from "../Components/Common/Buttons/LargeButtons/LargeGreenButtons/LargeGreenButtons.js"`
 
-**MAJOR COMPS**: As of the moment, the size of Morpheus code-base is not so large that there are a wide range of functions within the site. Therefore major Components such as "SwitchingProcess" and "CompareRates" live directly in the top-level of `src/Components`.
+**MAJOR COMPS**: As of the moment, the size of Morpheus code-base is not so large that there are a wide range of functions within the site. Therefore major Components such as "SwitchingProcess" and "Compare" live directly in the top-level of `src/Components`.
 As the size of the Morpheus project grows, this may be subject to change.
 
 **REUSABLE COMPS**: We advise keeping small reusable features in a self-contained, clearly labelled sub-folder in `/src/Components/Common`. Think customised buttons, checkboxes, popups etc.
@@ -265,7 +358,7 @@ Files inside the `/public` directory in the top level will not be processed by W
 
 **HOOKS**: For the time being, there are only a few implemented custom hooks so these will live in a separate Directory in `/src/Components/Hooks`
 
-**UTILITIES**: Reusable functions that can be imported and used throughout the project should live in a separate directory in `/src/utils`
+**UTILITIES**: Reusable functions that can be imported and used throughout the project should live in a separate directory in `/src/Utils`
 
 **REDUX REDUCERS/ACTIONS**: We follow the 'rails' convention with our Redux libraries. Therefore reducers and actions will live in their respective folders alongside each other in the `/src` directory:
 
@@ -279,6 +372,31 @@ Files inside the `/public` directory in the top level will not be processed by W
  ┣    ┗ 📜 UserReducers.js
  ┣    ┗ 📜 RatesReducers.js
 ```
+
+<a name="importing-files"></a>
+
+**i18n JSON**: The internationalisation files for German and English are kept in the `public/locales` directory under their respective locations of `de` and `en`. These files must be named exactly the same, in English writing.
+
+---
+
+### Importing files
+
+This project allows the import of modules from absolute paths under the `src` directory.
+you can read more about this [here.](https://create-react-app.dev/docs/importing-a-component/#absolute-imports)
+What this means is it allows you to avoid unnecessarily long imports that go up and down the directory structure. Instead you can import directly downwards from the `src` folder.
+
+Example:
+Wrong:
+
+- [ ] `import * from /../../../../Assets/Logos/logo.png`
+
+Correct:
+
+- [x] `Assets/Logos/logo.png`
+
+**DISCLAIMER:** Importing files from the top-level `src` director will need to be explicitly imported with the file extension. An example would be using the `Axios` instance from `src/Axios.js`. This would be done as such:
+
+`import axios from "Axios.js"`
 
 ## Git workflow
 
@@ -460,11 +578,13 @@ You should then proceed to pull the most recent changes from your co-worker and 
 
 ## Standard Practices
 
+<a name="javascript"></a>
+
 ### Javascript / General Development
 
-+ First of all, please check your **developer console** in the browser for **errors**. This is where React is giving you crucial information that without being resolved, these errors will make it to production.
+- First of all, please check your **developer console** in the browser for **errors**. This is where React is giving you crucial information that without being resolved, these errors will make it to production.
 
-+ If you are using a state object without needing to set it again, just declare the state object inside `[ ]` on it's own. This way you wont end up with an unused setState variable. Example:
+- If you are using a state value without needing to set it again, just declare the state value inside an array `[ ]` without a state-setter . This way you wont end up with an unused setState variable. Example:
 
 ```
 Incorrect:
@@ -473,21 +593,25 @@ Correct:
 const [value] = useState(0);
 ```
 
-### CSS / SCSS
+- The "React Devtools", and "Redux Devtools" extensions for Google Chrome are invaluable resources for information. You can avoid writing a lot of unnecessary Console.log's by using these tools correctly.
 
-+ At the moment we are following the **BEM** convention for naming css classes.
-You can read succinct documentation about that here: [link](https://css-tricks.com/bem-101/)
+---
 
-+ Use **comments** in your CSS/SCSS files to break down the styles into sections, and also clearly explain more complicated rules.
+### CSS
 
-+ Lay out your elements & classes in the same order. This should follow a general pattern from top to bottom:
+- At the moment we are following the **BEM** convention for naming css classes.
+  You can read succinct documentation about that here: [link](https://css-tricks.com/bem-101/)
+
+- Use **comments** in your CSS/SCSS files to break down the styles into sections, and also clearly explain more complicated rules.
+
+- Lay out your Stylesheet elements & classes in the same order. This should follow a general pattern from top to bottom:
 
 1. Generic Classes / Main body of an element
 2. Specific elements
 3. Pseudo classes and effects / animations.
 4. Media Queries
 
-+ Lay out your style rules for each element / class in the same pattern. This helps team-members to predict what your css will look like and save time. Generally this should be something like:
+- Lay out your style rules for each element / class in the same pattern. This helps team-members to predict what your css will look like and save time. Generally this should be something like:
 
 ```
 .example-class{
@@ -507,7 +631,7 @@ You can read succinct documentation about that here: [link](https://css-tricks.c
         justify-content: flex-start;
         align-self: center;
         float: left;
-// 4. Margins, Paddings & sizing:
+// 4. Margins, Paddings & Sizing:
         margin: 10px 20px;
         padding: 5px;
         height: auto;
@@ -540,8 +664,7 @@ You can read succinct documentation about that here: [link](https://css-tricks.c
 }
 ```
 
-
-+ If you are using a set of styles often enough, consider creating a **generic class** of those styles and apply the class to elements in the standard BEM fashion. example:
+- If you are using a set of styles often enough, consider creating a **generic class** of those styles and apply the class to elements in the standard BEM fashion. example:
 
 ```
 .flex-column {
@@ -554,14 +677,15 @@ You can read succinct documentation about that here: [link](https://css-tricks.c
 </div>
 ```
 
-+ Creating an extra wrapping element to apply one specific style or ID should be avoided if possible. Styles should be respective of the children themselves. Thus targeting an element with *CSS selector combinators** would be the better option. Example:
+- Creating an extra wrapping element to apply one specific style or ID should be avoided if possible. Styles should be respective of the children themselves. Thus targeting an element with **CSS selector combinators** would be the better option. Example:
+
 ```
 .parent-with-child > ul:nth-child(2){
     //styling here
 }
 ```
 
-+ Use **CSS shorthand** wherever possible. This creates a cleaner layout and less overall code. Example:
+- Use **CSS shorthand** wherever possible. This creates a cleaner layout and less overall code. Example:
 
 ```
 Incorrect:
@@ -577,18 +701,66 @@ Correct:
 }
 ```
 
-+ Use **absolute positioning** sparingly! While tempting to style something specific using positioning, this can be hard to maintain and can quickly cause unwanted behaviour.
+- Use **absolute positioning** sparingly! While tempting to style something specific using positioning, this can be hard to maintain and can quickly cause unwanted behaviour.
 
+---
 
+### SCSS
 
+- General SCSS files for shared variables, extenders & mixins should be located in the `src/Assets/Sass` directory.
+
+- Due to the SASS_PATH environment variable in the `.env` file in the root directory, you can now import your SCSS files with an absolute path down from `src` much like you would any other file. example:
+
+A deeply nested SCSS file in /Components/...
+
+```
+@import "src/Assets/Sass/variables.scss";
+
+.container{
+    // Variables from the imported SCSS file are now exposed for use
+    color: $some-sass-variable
+}
+```
+
+**An important reminder:** Sass imports must be terminated with a semi-colon `;`. This will throw an error otherwise.
+
+- Common colors, gradients, fonts and other styling choices are a safe choice for implementing as **Sass variables**.
+
+- If you are using a group of styles often enough, consider making a **Sass placeholder** to then implement in your stylesheets. A good example here would be a css rule that allows an element to take up the entire space of a parent with absolute positioning:
+
+```
+.some-class{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+```
+
+Here you could turn this into a Sass placeholder class with the modulo operator `%`to save on repeated use of this styling. Here is an example of use:
+
+```
+%my-placeholder-box-shadow {
+    margin:0
+    box-shadow: 0 0 0 100vmax rgba(0,0,0,0.2)
+}
+
+.class-to-extend{
+    @extend %my-placeholder-box-shadow;
+}
+```
+
+<a name="jsx"></a>
 
 ## JSX / HTML
 
-+ As image and icon files are located inside of `Assets` under `src`, you should be importing the image directly into javascript. This way, React will define an error if the file is not found, instead of showing a missing file icon in the browser. You should import like this:
-> `import` image-name `from` `"relative-path-location"`
+- As image and icon files are located inside of `Assets` under `src`, you should be importing the image directly into javascript. This way, React will define an error if the file is not found, instead of showing a missing file icon in the browser. You should import like this:
 
-+ Try to avoid creating unnecessary wrapping divs for the return statement in a function component. You can use `React.Fragment` elements or the shorthand `<> </>` to solve this issue.
-example:
+  > `import` image-name `from` `"relative-path-location"`
+
+- Try to avoid creating unnecessary wrapping divs for the return statement in a function component. You can use `React.Fragment` elements or the shorthand `<> </>` to solve this issue.
+  example:
 
 ```
 export default function ExampleComp(){
@@ -602,6 +774,5 @@ export default function ExampleComp(){
 }
 ```
 
-## Teamwork Methods
 
-- Modified by `Henry J. E. Crookes` on `24.10.2020`
+- Modified by `Henry J. E. Crookes` on `24.11.2020`
